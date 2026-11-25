@@ -3,3 +3,8 @@ node_modules/
 **/frames/
 **/.remotion/
 *.log
+# Episode build: regenerated files (rebuild with tools/prepare.mjs + tools/audio.mjs)
+ep1/voices/_tmp/
+ep1/anim/public/audio/
+ep1/anim/public/brand/
+ep1/anim/out/

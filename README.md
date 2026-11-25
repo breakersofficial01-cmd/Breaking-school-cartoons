@@ -11,3 +11,4 @@ Start a Claude Code session on this repo and say:
 - `ep1/music/` — put `bgm.mp3` here (optional)
 - `ep1/voices/` — leave empty to generate voices with Gemini TTS
 - Finished videos are pushed to the `ep1-output` branch in `ep1/out/`
+- Build notes and how to re-run: `ep1/anim/README.md`

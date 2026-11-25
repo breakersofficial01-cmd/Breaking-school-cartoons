@@ -1,0 +1,50 @@
+[
+ {
+  "file": "v01_B.mp3",
+  "voice": "Fenrir",
+  "tag": "colloquial Dhaka street Bangla, not formal, 13-year-old boy, young light fast voice, over-dramatic, whiny, comic, stunned and dreamy, gasp first, clear natural Dhaka pronunciation",
+  "attempts": 2,
+  "transcript": "মা মা, এটা কিডা?",
+  "duration_s": 2.25
+ },
+ {
+  "file": "v02_C.mp3",
+  "voice": "Charon",
+  "tag": "colloquial Dhaka street Bangla, not formal, 13-year-old boy, young light fast voice, deadpan, flat, sarcastic, bored, can't be bothered",
+  "attempts": 1,
+  "transcript": "দূর হালা, ওটা রাহুলের গার্লফ্রেন্ড।",
+  "duration_s": 2.85
+ },
+ {
+  "file": "v03_B.mp3",
+  "voice": "Fenrir",
+  "tag": "colloquial Dhaka street Bangla, not formal, 13-year-old boy, young light fast voice, over-dramatic, whiny, comic, fake preachy like an old uncle giving a sermon, slower",
+  "attempts": 1,
+  "transcript": "দূর এই সব তো ঠিক না। এই সব বয়সে এই সব লুচ্চামি করে বেড়াইতেছে এরা। পাক্কা জাহান্নামি হালারা।",
+  "duration_s": 7.73
+ },
+ {
+  "file": "v04_C.mp3",
+  "voice": "Charon",
+  "tag": "colloquial Dhaka street Bangla, not formal, 13-year-old boy, young light fast voice, deadpan, flat, sarcastic, slow, knowing, smug",
+  "attempts": 1,
+  "transcript": "তুই যে কত বড় লুচ্চা আমি ওটা জানি।",
+  "duration_s": 3.42
+ },
+ {
+  "file": "v05_A.mp3",
+  "voice": "Puck",
+  "tag": "colloquial Dhaka street Bangla, not formal, 13-year-old boy, young light fast voice, cocky, fast, teasing, loud, shouting from a distance then urgent, stress ফাটাইব",
+  "attempts": 1,
+  "transcript": "বলদরা, পড়াশোনা করছিস কিছু? আজকে শমিক স্যার কিন্তু ফাটাবো পড়তে না পারলে।",
+  "duration_s": 5.69
+ },
+ {
+  "file": "v06_C.mp3",
+  "voice": "Charon",
+  "tag": "colloquial Dhaka street Bangla, not formal, 13-year-old boy, young light fast voice, deadpan, flat, sarcastic, totally calm, innocent lie",
+  "attempts": 1,
+  "transcript": "আমি তো কিছুই পড়ি নাই।",
+  "duration_s": 1.78
+ }
+]
