@@ -4,7 +4,7 @@
 import React from 'react';
 import {INK, SW} from '../config';
 
-export type GirlSpec = {skin: string; hair: 'plaits' | 'pony'; height: number; seed: number; phase: number};
+export type GirlSpec = {skin: string; hair: 'plaits' | 'pony'; height: number; seed: number; phase: number; orna?: boolean};
 
 export const Girl: React.FC<{x: number; y: number; scale?: number; spec: GirlSpec; t: number; facing?: number}> = ({x, y, scale = 1, spec, t, facing = 0}) => {
   const {skin, hair, height: h, seed, phase} = spec;
@@ -71,6 +71,14 @@ export const Girl: React.FC<{x: number; y: number; scale?: number; spec: GirlSpe
         <path d={`M ${hw - 16} ${kameezTop + 8} L ${-hw + 4} ${kameezTop + kameezH * 0.5}`} stroke="#2350B8" strokeWidth={13} strokeLinecap="round" />
         <rect x={-hw - 6} y={kameezTop + kameezH * 0.46} width={hw * 2 + 12} height={20} rx={4} fill="#2350B8" stroke={INK} strokeWidth={4} />
         <rect x={-11} y={kameezTop + kameezH * 0.46 - 3} width={22} height={26} rx={4} fill="#C9A227" stroke={INK} strokeWidth={3} />
+        {/* white orna (scarf) over both shoulders, ends hanging down the front */}
+        {spec.orna ? (
+          <g fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round">
+            <path d={`M ${-hw - 4} ${kameezTop + 10} Q 0 ${kameezTop + 40} ${hw + 4} ${kameezTop + 10} L ${hw - 6} ${kameezTop - 6} Q 0 ${kameezTop + 18} ${-hw + 6} ${kameezTop - 6} Z`} />
+            <path d={`M ${-hw + 2} ${kameezTop + 8} L ${-hw - 8} ${kameezTop + kameezH * 0.62} L ${-hw + 18} ${kameezTop + kameezH * 0.62} L ${-hw + 22} ${kameezTop + 14} Z`} />
+            <path d={`M ${hw - 2} ${kameezTop + 8} L ${hw + 8} ${kameezTop + kameezH * 0.62} L ${hw - 18} ${kameezTop + kameezH * 0.62} L ${hw - 22} ${kameezTop + 14} Z`} />
+          </g>
+        ) : null}
         {/* plaits behind the head */}
         {hair === 'plaits' ? [-1, 1].map(plait) : null}
         <rect x={-12} y={kameezTop - 18} width={24} height={24} fill={skin} stroke={INK} strokeWidth={4} />
@@ -119,8 +127,8 @@ export const Girl: React.FC<{x: number; y: number; scale?: number; spec: GirlSpe
 };
 
 export const GIRLS: GirlSpec[] = [
-  {skin: '#C68A5E', hair: 'plaits', height: 1.0, seed: 3, phase: 0.0},
+  {skin: '#C68A5E', hair: 'plaits', height: 1.0, seed: 3, phase: 0.0, orna: true},
   {skin: '#B97A4E', hair: 'pony', height: 1.05, seed: 7, phase: 1.1},
-  {skin: '#D09A6C', hair: 'plaits', height: 0.95, seed: 11, phase: 2.2},
+  {skin: '#D09A6C', hair: 'plaits', height: 0.95, seed: 11, phase: 2.2, orna: true},
   {skin: '#A86F44', hair: 'pony', height: 1.0, seed: 17, phase: 0.6},
 ];

@@ -385,6 +385,14 @@ export const Boy: React.FC<{id: CharId; x?: number; y?: number; scale?: number; 
               <text x={px} y={shirtTop + 57} fontFamily="Arial Black, Arial" fontWeight={900} fontSize={12} fill="#fff" textAnchor="middle">B</text>
               <path d={`M -26 ${shirtTop + 2} L 0 ${shirtTop + 26} L -6 ${shirtTop + 34} L -34 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
               <path d={`M 26 ${shirtTop + 2} L 0 ${shirtTop + 26} L 6 ${shirtTop + 34} L 34 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+              {/* school ID card on a red lanyard (Bangladeshi school detail) */}
+              <path d={`M -16 ${shirtTop + 6} L ${hw * 0.32 - 8} ${shirtTop + s.torsoH * 0.5} M 16 ${shirtTop + 6} L ${hw * 0.32 + 8} ${shirtTop + s.torsoH * 0.5}`} stroke="#C62828" strokeWidth={5} strokeLinecap="round" />
+              <g transform={`translate(${hw * 0.32} ${shirtTop + s.torsoH * 0.5})`}>
+                <rect x={-17} y={0} width={34} height={44} rx={4} fill="#fff" stroke={INK} strokeWidth={3} />
+                <rect x={-17} y={0} width={34} height={10} rx={3} fill="#1E6B3C" />
+                <rect x={-10} y={14} width={20} height={16} rx={2} fill="#9FC5E8" stroke={INK} strokeWidth={1.5} />
+                <line x1={-11} y1={36} x2={11} y2={36} stroke="#888" strokeWidth={2.5} />
+              </g>
             </g>
           )}
           {s.bag ? (

@@ -8,7 +8,7 @@
 import React from 'react';
 import {INK, PIC_H, PIC_W} from '../config';
 import {TL, keys, shot, tw} from '../anim';
-import {FieldScene} from '../scenes/Scenes';
+import {Stage, girlActors} from './stage';
 
 const P = TL.cues.phone;
 const TYPED = TL.cues.typed;
@@ -247,7 +247,7 @@ export const PhoneShots: React.FC<{t: number}> = ({t}) => {
   const ripP = tapRipple === P.open ? TAP.open : tapRipple === P.searchTap ? TAP.search : tapRipple === P.channelTap ? TAP.channel : TAP.video;
   return (
     <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#000'}}>
-      <FieldScene cam={{x: 1500, y: 420, z: 1.3}} t={t} blur={12} front={false} />
+      <Stage world="field" cam={{pos: [5, 1.5, 3], target: [5, 1.6, -8], fov: 45}} t={t} actors={girlActors()} blur={12} />
       <div style={{position: 'absolute', inset: 0, transformOrigin: '0 0', transform: `translate(${tx}px, ${ty + sway}px) scale(${scale})`}}>
         {/* phone body */}
         <div style={{position: 'absolute', left: PH.x, top: PH.y, width: PH.w, height: PH.h, borderRadius: 60, background: '#111', border: `5px solid ${INK}`, boxSizing: 'border-box', boxShadow: '0 20px 60px rgba(0,0,0,.45)'}} />
