@@ -6,15 +6,17 @@ import {FPS, FONT_BN, PIC_H, PIC_W, SIZE} from './config';
 import {TL} from './anim';
 import {Caption, PictureArea, Watermark} from './ui/Frame';
 import {Shot3} from './shots/Shot3';
+import {Shot1, Shot2, Shot4, Shot5, Shot6, Shot7} from './shots/ShotsField';
+import {PhoneShots} from './shots/ShotPhone';
 
-// Shots not built yet show a labelled card (replaced in the full build).
+// Fallback card if a shot id has no component (should not happen).
 const Pending: React.FC<{n: number}> = ({n}) => (
   <div style={{width: PIC_W, height: PIC_H, background: '#333', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_BN, fontSize: 60}}>
     Shot {n}
   </div>
 );
 
-const SHOTS: Record<number, React.FC<{t: number}>> = {3: Shot3};
+const SHOTS: Record<number, React.FC<{t: number}>> = {1: Shot1, 2: Shot2, 3: Shot3, 4: Shot4, 5: Shot5, 6: Shot6, 7: Shot7, 8: PhoneShots, 9: PhoneShots};
 
 export const captionAt = (t: number) => TL.captions.find((c) => t >= c.start && t < c.end)?.text ?? '';
 

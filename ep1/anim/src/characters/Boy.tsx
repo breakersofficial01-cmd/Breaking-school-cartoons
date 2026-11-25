@@ -37,6 +37,8 @@ export type Pose = {
   glint?: number; // 0..1 glasses glint
   deflate?: number; // 0..1 sag
   stretch?: number; // vertical squash/stretch, 1 = normal
+  wink?: boolean; // closes the character's left eye (screen right)
+  back?: boolean; // seen from behind (over-the-shoulder shot): no face, back of shirt
 };
 
 type Spec = {
@@ -184,6 +186,19 @@ export const Head: React.FC<{id: CharId; pose: Pose}> = ({id, pose}) => {
   const my = ry * 0.48;
   const mouth = pose.mouth ?? s.rest;
   const blush = Math.min(1, (s.cheeks ? 0.45 : 0) + (pose.blush ?? 0) * 0.5);
+  if (pose.back) {
+    // back of the head: ears + a full hair cap, neck shadow
+    return (
+      <g>
+        {[-1, 1].map((side) => <ellipse key={side} cx={side * (rx - 2)} cy={6} rx={13} ry={18} fill={s.skin} stroke={INK} strokeWidth={SW} />)}
+        <ellipse cx={0} cy={0} rx={rx} ry={ry} fill={s.skin} stroke={INK} strokeWidth={SW} />
+        <path d={`M ${-rx - 4} ${ry * 0.35} Q ${-rx - 12} ${-ry * 1.2} 0 ${-ry * 1.14} Q ${rx + 12} ${-ry * 1.2} ${rx + 4} ${ry * 0.35} Q 0 ${ry * 0.62} ${-rx - 4} ${ry * 0.35} Z`} fill="#141414" stroke={INK} strokeWidth={SW} strokeLinejoin="round" />
+        {s.hair === 'spiky' ? <path d={`M ${-rx * 0.8} ${-ry * 0.9} l -20 -30 l 34 10 l 10 -36 l 22 30 l 26 -30 l 6 36 l 32 -14 l -14 34`} fill="#141414" stroke={INK} strokeWidth={SW} strokeLinejoin="round" /> : null}
+        <path d={`M ${-rx * 0.3} ${-ry * 0.7} q ${rx * 0.3} -20 ${rx * 0.6} 0`} fill="none" stroke="#444" strokeWidth={5} strokeLinecap="round" />
+        {s.glasses ? <line x1={-rx + 2} y1={-6} x2={rx - 2} y2={-6} stroke={INK} strokeWidth={5} /> : null}
+      </g>
+    );
+  }
   return (
     <g>
       {[-1, 1].map((side) => (
@@ -202,7 +217,7 @@ export const Head: React.FC<{id: CharId; pose: Pose}> = ({id, pose}) => {
         </g>
       ) : null}
       <Hair kind={s.hair} rx={rx} ry={ry} />
-      {[-1, 1].map((side) => <Eye key={side} x={side * ex} y={ey} r={s.eyeR} state={eyes} look={look} skin={s.skin} />)}
+      {[-1, 1].map((side) => <Eye key={side} x={side * ex} y={ey} r={s.eyeR} state={pose.wink && side === 1 ? 'happy' : eyes} look={look} skin={s.skin} />)}
       {s.glasses ? (
         <g fill="none" stroke={INK} strokeWidth={5}>
           {[-1, 1].map((side) => <rect key={side} x={side * ex - s.eyeR - 8} y={ey - s.eyeR - 8} width={s.eyeR * 2 + 16} height={s.eyeR * 2.3 + 12} rx={12} fill="#bfe3ff" fillOpacity={0.25} />)}
@@ -321,13 +336,23 @@ export const Boy: React.FC<{id: CharId; x?: number; y?: number; scale?: number; 
           <path d={`M ${-hw + 4} ${shirtTop + 8} Q ${-hw - 6} ${shirtTop + s.torsoH * 0.5} ${-bw} ${shirtBottom} L ${bw} ${shirtBottom} Q ${hw + 6} ${shirtTop + s.torsoH * 0.5} ${hw - 4} ${shirtTop + 8} Q 0 ${shirtTop - 8} ${-hw + 4} ${shirtTop + 8} Z`} fill="#fff" stroke={INK} strokeWidth={SW} strokeLinejoin="round" />
           <path d={`M ${bw - 26} ${shirtTop + 30} Q ${bw - 4} ${shirtTop + s.torsoH * 0.6} ${bw - 6} ${shirtBottom - 4} L ${bw - 22} ${shirtBottom - 4} Z`} fill="#DDE4EE" />
           {s.untucked ? <path d={`M ${-bw + 6} ${shirtBottom - 2} q 18 -8 30 2`} fill="none" stroke="#c6cfdc" strokeWidth={4} /> : null}
-          <line x1={0} y1={shirtTop + 22} x2={0} y2={shirtBottom - 4} stroke="#c6cfdc" strokeWidth={3} />
-          {[0, 1, 2].map((i) => <circle key={i} cx={0} cy={shirtTop + 36 + (i * (s.torsoH - 50)) / 3} r={4} fill="#fff" stroke="#8a95a5" strokeWidth={2} />)}
-          <rect x={px - 20} y={shirtTop + 34} width={40} height={40} rx={4} fill="#fff" stroke="#9aa5b5" strokeWidth={3} />
-          <path d={`M ${px - 12} ${shirtTop + 40} h 24 v 14 q 0 12 -12 16 q -12 -4 -12 -16 Z`} fill="#B3261E" stroke={INK} strokeWidth={2.5} />
-          <text x={px} y={shirtTop + 57} fontFamily="Arial Black, Arial" fontWeight={900} fontSize={12} fill="#fff" textAnchor="middle">B</text>
-          <path d={`M -26 ${shirtTop + 2} L 0 ${shirtTop + 26} L -6 ${shirtTop + 34} L -34 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
-          <path d={`M 26 ${shirtTop + 2} L 0 ${shirtTop + 26} L 6 ${shirtTop + 34} L 34 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+          {pose.back ? (
+            <g>
+              {/* back of the shirt: yoke seam + collar band */}
+              <path d={`M ${-hw + 10} ${shirtTop + 30} Q 0 ${shirtTop + 44} ${hw - 10} ${shirtTop + 30}`} fill="none" stroke="#c6cfdc" strokeWidth={3} />
+              <path d={`M -30 ${shirtTop + 4} Q 0 ${shirtTop - 6} 30 ${shirtTop + 4} L 28 ${shirtTop + 14} Q 0 ${shirtTop + 6} -28 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+            </g>
+          ) : (
+            <g>
+              <line x1={0} y1={shirtTop + 22} x2={0} y2={shirtBottom - 4} stroke="#c6cfdc" strokeWidth={3} />
+              {[0, 1, 2].map((i) => <circle key={i} cx={0} cy={shirtTop + 36 + (i * (s.torsoH - 50)) / 3} r={4} fill="#fff" stroke="#8a95a5" strokeWidth={2} />)}
+              <rect x={px - 20} y={shirtTop + 34} width={40} height={40} rx={4} fill="#fff" stroke="#9aa5b5" strokeWidth={3} />
+              <path d={`M ${px - 12} ${shirtTop + 40} h 24 v 14 q 0 12 -12 16 q -12 -4 -12 -16 Z`} fill="#B3261E" stroke={INK} strokeWidth={2.5} />
+              <text x={px} y={shirtTop + 57} fontFamily="Arial Black, Arial" fontWeight={900} fontSize={12} fill="#fff" textAnchor="middle">B</text>
+              <path d={`M -26 ${shirtTop + 2} L 0 ${shirtTop + 26} L -6 ${shirtTop + 34} L -34 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+              <path d={`M 26 ${shirtTop + 2} L 0 ${shirtTop + 26} L 6 ${shirtTop + 34} L 34 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+            </g>
+          )}
           {s.bag ? (
             <g strokeLinecap="round">
               <path d={`M ${hw - 30} ${shirtTop + 4} L ${-hw + 14} ${shirtBottom - 6}`} stroke={INK} strokeWidth={18} />
