@@ -14,6 +14,9 @@ npx remotion render src/index.ts Main1x1 ../out/final_1x1.mp4
 ## Owner decisions that override the prompt
 - **No title bar** in any scene (2026-11-25). The picture fills the whole 1080x1080 frame.
 - **Logo** = `ep1/brand/logo.svg` (horizontal amber "BREAKING SCHOOL"), watermark top-right at 70%.
+- **The logo appears ONLY in the top-right corner** (2026-11-25). Nowhere else: not on the
+  phone app's channel page or thumbnails (use plain "Breaking School" text there instead),
+  not on signs. The red "B" shirt badge is part of the uniform, not the logo.
 
 ## Gemini TTS facts (found by testing; ai.google.dev is blocked in the cloud session)
 - `gemini-3.8-flash-tts` reads text word for word; an English preamble is spoken aloud.

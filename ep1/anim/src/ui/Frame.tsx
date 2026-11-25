@@ -7,7 +7,8 @@ import assets from '../generated/assets.json';
 
 const LOGO_RATIO = 256 / 732;
 
-// The Breaking School logo at a given width. A soft dark shadow keeps the amber
+// The Breaking School logo at a given width. Owner rule: use it ONLY in <Watermark/>
+// (top-right corner), never inside a scene. A soft dark shadow keeps the amber
 // readable on the bright sky; `plain` drops it (e.g. on the phone's white UI).
 export const LogoMark: React.FC<{width: number; plain?: boolean}> = ({width, plain}) => {
   const style: React.CSSProperties = {width, height: width * LOGO_RATIO, objectFit: 'contain', display: 'block',
