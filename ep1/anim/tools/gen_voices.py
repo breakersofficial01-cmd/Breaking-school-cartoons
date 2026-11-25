@@ -34,7 +34,7 @@ LINES = [
     ('v05_A', 'A', 'বলদরা, পড়াশোনা করছস কিছু? আজকে সৌমিক স্যার কিন্তু ফাটাইব পড়া না পারলে।', 'shouting from a distance then urgent, stress ফাটাইব'),
     ('v06_C', 'C', 'আমি তো কিছুই পড়ি নাই।', 'totally calm, innocent lie'),
     ('v07_B', 'B', 'পড়াশোনা তো একটা দুর্লভ বিষয়, এটা তো আমি আর করি না, আমি তো সস্তা জিনিস করি।', 'proud and philosophical, slow, cheeky ending'),
-    ('v08_A', 'A', 'যে একখান ছোট্ট ক্লাস পাইছি, এইটা দেখ, এইটা দেখলে বাঁচে যাইব।', 'confident whisper, sharing a secret'),
+    ('v08_A', 'A', 'যে একখান ছোট্ট ক্লাস পাইছি, এইটা দেখ, এইটা দেখলে বাঁচে যাইব।', 'confident whisper, sharing a secret, clear words: যে একখান ছোট্ট ক্লাস'),
     ('v09_BC', 'BC', 'শুরু কর বেটা, তাড়াতাড়ি কর।', 'desperate, rushed, loud'),
 ]
 
