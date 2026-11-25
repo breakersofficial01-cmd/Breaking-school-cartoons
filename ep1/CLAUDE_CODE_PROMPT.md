@@ -6,6 +6,8 @@ You are making a short 2D cartoon comedy video for **Breaking School**, an edtec
 
 This runs in a Claude Code cloud session on my GitHub repo, not on my computer. So:
 
+- **Only this repo:** work only in `Breaking-school-cartoons`. The environment may also contain `shoumik--breaking--city` (my separate game project). Never write, commit or push anything there.
+
 - **Long renders:** a foreground command times out after a few minutes. Run every Remotion render and long ffmpeg job **in the background**, write its log to a file, and check the log until it finishes. Render in parts (per shot) where that helps.
 - **Delivering results:** I can only get files through GitHub. When a step produces something I need to review (voices, test clip, preview, final exports), **commit it and push to the branch `ep1-output`**, then tell me the file paths.
 - **File sizes:** keep every committed file under 90 MB (GitHub refuses files over 100 MB). If a file is bigger, lower its bitrate. Never commit `node_modules/`, caches or intermediate frames: add them to `.gitignore`.
