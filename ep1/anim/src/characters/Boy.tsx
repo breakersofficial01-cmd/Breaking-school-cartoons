@@ -11,7 +11,7 @@ import React from 'react';
 import {INK, SW} from '../config';
 
 export type CharId = 'A' | 'B' | 'C';
-export type Mouth = 'closed' | 'small' | 'medium' | 'wide' | 'O' | 'grin' | 'frown' | 'smirk';
+export type Mouth = 'closed' | 'small' | 'medium' | 'wide' | 'O' | 'grin' | 'frown' | 'smirk' | 'sly';
 export type Eyes = 'open' | 'half' | 'closed' | 'huge' | 'sparkle' | 'happy';
 export type Arm = {sh: number; el: number};
 
@@ -38,6 +38,7 @@ export type Pose = {
   deflate?: number; // 0..1 sag
   stretch?: number; // vertical squash/stretch, 1 = normal
   wink?: boolean; // closes the character's left eye (screen right)
+  turn?: number; // 3/4 head turn, -1 = faces screen-left, +1 = faces screen-right (talk TO someone)
   back?: boolean; // seen from behind (over-the-shoulder shot): no face, back of shirt
 };
 
@@ -104,6 +105,13 @@ export const MouthShape: React.FC<{m: Mouth; y: number}> = ({m, y}) => {
       return <path d={`M -18 ${y} Q 0 ${y + 10} 18 ${y}`} fill="none" {...st} strokeWidth={5} strokeLinecap="round" />;
     case 'smirk':
       return <path d={`M -20 ${y + 4} Q 6 ${y + 12} 24 ${y - 6}`} fill="none" {...st} strokeWidth={5} strokeLinecap="round" />;
+    case 'sly': // toothy side-smirk (one corner up)
+      return (
+        <g>
+          <path d={`M -24 ${y + 2} Q 2 ${y + 16} 28 ${y - 10} Q 10 ${y + 4} -24 ${y + 2} Z`} fill="#fff" {...st} />
+          <path d={`M -2 ${y + 4} L -2 ${y + 11} M 10 ${y + 2} L 10 ${y + 8}`} stroke={INK} strokeWidth={2.5} />
+        </g>
+      );
     case 'frown':
       return <path d={`M -20 ${y + 10} Q 0 ${y - 4} 20 ${y + 10}`} fill="none" {...st} strokeWidth={5} strokeLinecap="round" />;
     case 'small':
@@ -199,25 +207,47 @@ export const Head: React.FC<{id: CharId; pose: Pose}> = ({id, pose}) => {
       </g>
     );
   }
+  // 3/4 turn (classic 2D trick): features slide toward the facing side, the far eye
+  // narrows, the far ear shows more, the hair mass shifts back.
+  const turn = Math.max(-1, Math.min(1, pose.turn ?? 0));
+  const fx = turn * rx * 0.34; // feature offset
+  const shadeSide = turn === 0 ? 1 : -Math.sign(turn); // shade on the far side
   return (
     <g>
-      {[-1, 1].map((side) => (
-        <g key={side}>
-          <ellipse cx={side * (rx - 2)} cy={6} rx={13} ry={18} fill={s.skin} stroke={INK} strokeWidth={SW} />
-          <path d={`M ${side * (rx - 2)} -2 q ${side * 6} 8 0 16`} fill="none" stroke={s.skinShade} strokeWidth={4} />
-        </g>
-      ))}
+      {[-1, 1].map((side) => {
+        const far = turn !== 0 && side === -Math.sign(turn);
+        const ex2 = side * (rx - 2) + (far ? -turn * rx * 0.1 : -turn * rx * 0.18);
+        return (
+          <g key={side} opacity={!far && Math.abs(turn) > 0.7 ? 0 : 1}>
+            <ellipse cx={ex2} cy={6} rx={13} ry={18} fill={s.skin} stroke={INK} strokeWidth={SW} />
+            <path d={`M ${ex2} -2 q ${side * 6} 8 0 16`} fill="none" stroke={s.skinShade} strokeWidth={4} />
+          </g>
+        );
+      })}
       <ellipse cx={0} cy={0} rx={rx} ry={ry} fill={s.skin} stroke={INK} strokeWidth={SW} />
-      {/* simple cel shade on the right side of the face */}
-      <path d={`M ${rx * 0.55} ${-ry * 0.75} Q ${rx * 1.0} 0 ${rx * 0.5} ${ry * 0.86} Q ${rx * 0.82} 0 ${rx * 0.55} ${-ry * 0.75} Z`} fill={s.skinShade} opacity={0.35} />
+      {/* simple cel shade on the far side of the face */}
+      <path transform={`scale(${shadeSide} 1)`} d={`M ${rx * 0.55} ${-ry * 0.75} Q ${rx * 1.0} 0 ${rx * 0.5} ${ry * 0.86} Q ${rx * 0.82} 0 ${rx * 0.55} ${-ry * 0.75} Z`} fill={s.skinShade} opacity={0.35} />
+      <g transform={`translate(${fx} 0)`}>
       {blush > 0 ? (
         <g opacity={blush}>
           <ellipse cx={-rx * 0.55} cy={ry * 0.32} rx={16} ry={9} fill="#E0735A" />
           <ellipse cx={rx * 0.55} cy={ry * 0.32} rx={16} ry={9} fill="#E0735A" />
         </g>
       ) : null}
-      <Hair kind={s.hair} rx={rx} ry={ry} />
-      {[-1, 1].map((side) => <Eye key={side} x={side * ex} y={ey} r={s.eyeR} state={pose.wink && side === 1 ? 'happy' : eyes} look={look} skin={s.skin} />)}
+      </g>
+      <g transform={`translate(${-turn * rx * 0.06} 0)`}>
+        <Hair kind={s.hair} rx={rx} ry={ry} />
+      </g>
+      <g transform={`translate(${fx} 0)`}>
+      {[-1, 1].map((side) => {
+        const far = turn !== 0 && side === -Math.sign(turn);
+        const k = far ? 1 - 0.28 * Math.abs(turn) : 1;
+        return (
+          <g key={side} transform={`translate(${side * ex} ${ey}) scale(${k} 1) translate(${-side * ex} ${-ey})`}>
+            <Eye x={side * ex} y={ey} r={s.eyeR} state={pose.wink && side === 1 ? 'happy' : eyes} look={turn !== 0 && look[0] === 0 ? [turn * 0.7, look[1]] : look} skin={s.skin} />
+          </g>
+        );
+      })}
       {s.glasses ? (
         <g fill="none" stroke={INK} strokeWidth={5}>
           {[-1, 1].map((side) => <rect key={side} x={side * ex - s.eyeR - 8} y={ey - s.eyeR - 8} width={s.eyeR * 2 + 16} height={s.eyeR * 2.3 + 12} rx={12} fill="#bfe3ff" fillOpacity={0.25} />)}
@@ -249,8 +279,12 @@ export const Head: React.FC<{id: CharId; pose: Pose}> = ({id, pose}) => {
           <path d={`M ${ex - 14} ${by - bt} q 14 ${-8 + bt} 28 ${bt}`} />
         </g>
       )}
-      <path d={`M 2 ${ry * 0.12} q 10 10 -2 16`} fill="none" stroke={INK} strokeWidth={4} strokeLinecap="round" />
-      <MouthShape m={mouth} y={my} />
+      {/* nose points toward the facing side */}
+      <path d={`M ${2 + turn * 10} ${ry * 0.12} q ${turn >= 0 ? 10 : -14} 10 ${turn >= 0 ? -2 : 2} 16`} fill="none" stroke={INK} strokeWidth={4} strokeLinecap="round" />
+      <g transform={`translate(${turn * 6} 0)`}>
+        <MouthShape m={mouth} y={my} />
+      </g>
+      </g>
       {(pose.sweat ?? 0) > 0 ? (
         <g opacity={Math.min(1, pose.sweat ?? 0)}>
           <path d={`M ${rx * 0.78} ${-ry * 0.55} q -14 22 0 30 q 14 -8 0 -30 Z`} fill="#8fd3ff" stroke={INK} strokeWidth={3} />
@@ -343,7 +377,7 @@ export const Boy: React.FC<{id: CharId; x?: number; y?: number; scale?: number; 
               <path d={`M -30 ${shirtTop + 4} Q 0 ${shirtTop - 6} 30 ${shirtTop + 4} L 28 ${shirtTop + 14} Q 0 ${shirtTop + 6} -28 ${shirtTop + 14} Z`} fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
             </g>
           ) : (
-            <g>
+            <g transform={`translate(${(pose.turn ?? 0) * 14} 0)`}>
               <line x1={0} y1={shirtTop + 22} x2={0} y2={shirtBottom - 4} stroke="#c6cfdc" strokeWidth={3} />
               {[0, 1, 2].map((i) => <circle key={i} cx={0} cy={shirtTop + 36 + (i * (s.torsoH - 50)) / 3} r={4} fill="#fff" stroke="#8a95a5" strokeWidth={2} />)}
               <rect x={px - 20} y={shirtTop + 34} width={40} height={40} rx={4} fill="#fff" stroke="#9aa5b5" strokeWidth={3} />
